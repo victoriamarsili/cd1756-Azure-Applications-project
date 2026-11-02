@@ -12,7 +12,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from FlaskWebProject.models import User, Post
 import msal
 import uuid
-import logging
 
 imageSourceUrl = 'https://'+ app.config['BLOB_ACCOUNT']  + '.blob.core.windows.net/' + app.config['BLOB_CONTAINER']  + '/'
 
@@ -124,7 +123,11 @@ def authorized():
         ).acquire_token_by_authorization_code(
             request.args["code"],
             scopes=Config.SCOPE,
-            redirect_uri=url_for("authorized", _external=True)
+            redirect_uri=url_for(
+                "authorized",
+                _external=True,
+                _scheme="https"
+            )
         )
         if "error" in result:
             app.logger.warning(
